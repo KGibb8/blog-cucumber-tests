@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  before_action :find_post, only: [:show]
 
   def index
   end
@@ -11,10 +12,17 @@ class PostsController < ApplicationController
     current_user.posts.create(post_params)
   end
 
+  def show
+  end
+
   private
 
   def post_params
     params.require(:post).permit(:body)
+  end
+
+  def find_post
+    @post = Post.find(params[:id])
   end
 end
 
