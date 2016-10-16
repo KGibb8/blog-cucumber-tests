@@ -11,6 +11,15 @@ Feature: Posts
     When they are on the page of the post in question
     Then they can see the post
 
+  Scenario: A user edits their post
+    Given a user is signed in
+      And they have a post
+      And they are on the post page
+      When they click on the "Edit" button
+      And they make changes to the post
+      And they click on the "Save" button
+    Then they can see the updated post
+
   # Scenario: A user destroys an existing post
   #   Given a user is logged in
   #     And they are on the edit page
