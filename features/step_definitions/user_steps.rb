@@ -10,15 +10,19 @@ Given(/^a user has signed up$/) do
 end
 
 Given(/^they have created some posts$/) do
-  user = User.last
-  user.posts << Post.new(body: Faker::Lorem.paragraph)
-  user.posts << Post.new(body: Faker::Lorem.paragraph)
+  @user = User.last
+  @user.posts << Post.new(body: Faker::Lorem.paragraph)
+  @user.posts << Post.new(body: Faker::Lorem.paragraph)
 end
 
 When(/^they visit their posts index page$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  @user = User.last
+  visit user_posts_path @user
 end
 
 Then(/^they should see all of their posts$/) do
-  pending # Write code here that turns the phrase above into concrete actions
+  post1 = @user.posts[0]
+  post2 = @user.posts[1]
+  expect(page).to have_content(post1.body)
+  expect(page).to have_content(post2.body)
 end
