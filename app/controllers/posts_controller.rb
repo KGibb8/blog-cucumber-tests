@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :find_post, only: [:show, :edit, :update]
+  before_action :find_post, only: [:show, :edit, :update, :destroy]
 
   def index
   end
@@ -21,6 +21,12 @@ class PostsController < ApplicationController
   def update
     @post.update(post_params)
     redirect_to @post
+  end
+
+  def destroy
+    user = @post.user
+    @post.destroy
+    redirect_to user_posts_path(user)
   end
 
   private

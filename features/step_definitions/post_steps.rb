@@ -29,7 +29,6 @@ When(/^they fill in the relevant fields$/) do
 end
 
 When(/^they click on the "([^"]*)" button$/) do |button|
-  # save_and_open_page
   click_button button
 end
 
@@ -53,3 +52,8 @@ end
 Then(/^they can see the updated post$/) do
   expect(page).to have_content @new_description
 end
+
+Then(/^they can no longer see the post$/) do
+  expect(page).to_not have_content @post
+end
+

@@ -20,6 +20,10 @@ Feature: Posts
       And they click on the "Save" button
     Then they can see the updated post
 
-  # Scenario: A user destroys an existing post
-  #   Given a user is logged in
-  #     And they are on the edit page
+  Scenario: A user destroys an existing post
+    Given a user is signed in
+      And they have a post
+      And they are on the post page
+    When they click on the "Delete" button
+    Then they can no longer see the post
+
