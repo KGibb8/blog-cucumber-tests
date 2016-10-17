@@ -1,3 +1,8 @@
+Given(/^sample users have been created$/) do
+  User.create(email: "corey@gmail.com", password: "123456")
+  User.create(email: "trevor@gmail.com", password: "123456")
+end
+
 Given(/^they are on the new posts page$/) do
   visit new_post_path
 end
@@ -5,6 +10,19 @@ end
 Given(/^a post exists$/) do
   @user = User.create(email: Faker::Internet.email, password: "password", password_confirmation: "password")
   @user.posts.create(body: Faker::Lorem.paragraph)
+end
+
+Given(/^They have logged in as "([^"]*)"$/) do |email|
+  @user = User.find_by(email: email)
+  page.set_rack_session('warden.user.user.key' => User.serialize_into_session(@user))
+end
+
+When (/^They navigate to the "([^"]*)" page$/) do |page|
+  visit get_named_route(page)
+end
+
+When(/^They fill in the "([^"]*)" field with "([^"]*)"$/) do |label, content|
+  fill_in label, with: content
 end
 
 Given(/^a user is signed in$/) do
@@ -57,3 +75,25 @@ Then(/^they can no longer see the post$/) do
   expect(page).to_not have_content @post
 end
 
+When(/^They click the "([^"]*)" button$/) do |button|
+  click_on button
+end
+
+Then(/^A new post is created$/) do
+  expect(@user.posts.count).to eq(1)
+end
+
+Then(/^They are redirected to the "([^"]*)" page$/) do |path|
+  expect(current_path).to eq(get_named_route("root"))
+  # expect(page).to include Post.all.map(&:body)
+end
+
+Then(/^The page contains "([^"]*)"$/) do |content|
+  expect(page).to have_content(content)
+end
+
+Then(/^The page contains "([^"]*)" in "([^"]*)"$/) do |content, css_selector|
+  within(:css, css_selector) do
+    expect(page).to have_content(content)
+  end
+end

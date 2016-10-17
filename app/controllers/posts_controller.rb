@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
   before_action :find_post, only: [:show, :edit, :update, :destroy]
-
-  def index
+  
+  def index 
+    @posts = Post.all
   end
 
   def new
@@ -9,10 +10,10 @@ class PostsController < ApplicationController
   end
 
   def create
-    current_user.posts.create(post_params)
-  end
-
-  def show
+    post = current_user.posts.create(post_params)
+    redirect_to root_path
+    # Post.create(post_params).to_h.merge(user_id: current_user.id) end
+    # redirect_to post
   end
 
   def edit
@@ -32,7 +33,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:body)
+    params.require(:post).permit(:title, :body)
   end
 
   def find_post
