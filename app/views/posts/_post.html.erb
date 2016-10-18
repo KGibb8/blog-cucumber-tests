@@ -1,3 +1,7 @@
-<p><%= post.body %></p>
-<%= button_to "Edit", edit_post_path(post), method: :get %>
-<%= button_to "Delete", post_path(post), method: :delete %>
+<%= form_for @post do |f| %>
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+  <%= f.label :body %>
+  <%= f.text_area :body %>
+  <%= f.submit %>
+<% end %>

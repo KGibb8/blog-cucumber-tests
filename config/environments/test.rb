@@ -1,6 +1,7 @@
 require 'rack_session_access'
 
 Rails.application.configure do
+  config.secret_key = '06d752feff547943cb3f584c5ea3420b38e4f460172f9092c6500eaa12fb1b6a0c5f830f5cb908eab91e66a5df4bee4e32ac5ff42edb10f1a2a4bf060522bfee'
   # Settings specified here will take precedence over those in config/application.rb.
 
   # The test environment is used exclusively to run your application's

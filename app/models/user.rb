@@ -1,5 +1,12 @@
+require './app/uploaders/avatar_uploader'
+
 class User < ApplicationRecord
   has_many :posts
+  has_many :comments
+  # This works in tandem with fields for 
+  accepts_nested_attributes_for :comments
+  # Add Avatar Uploader
+  mount_uploader :avatar, AvatarUploader
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

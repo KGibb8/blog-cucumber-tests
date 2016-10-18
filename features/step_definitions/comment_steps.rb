@@ -1,8 +1,16 @@
-When(/^they fill in the comment relevant fields$/) do
-    pending # Write code here that turns the phrase above into concrete actions
+Then(/^A new comment is created$/) do
+  expect(@trev.comments.count).to eq(1)
 end
 
-Then(/^a new comment should be created$/) do
-    pending # Write code here that turns the phrase above into concrete actions
+When(/^sample comments have been created$/) do
+  @comment = @corey.posts.last.comments.create(body: "Big butts", user: @trev)
+end
+
+When(/^The "([^"]*)" belongs to the current user$/) do |arg1|
+  expect(@comment.user).to eq(@trev)
+end
+
+Then(/^The comment is updated$/) do
+  expect(page).to have_content @comment
 end
 

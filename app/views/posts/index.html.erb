@@ -1,6 +1,7 @@
-<% @posts.each do |post| %>
-  <div class="post">
-    <%= post.title %>
-    <%= post.body %>
-  </div>
-<% end %>
+
+<div class="posts">
+  <% @posts.each do |post| %>
+    <%= post.title %><br>
+    <%= post.body %><br>
+  <% end %>
+</div>

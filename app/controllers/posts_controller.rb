@@ -7,16 +7,22 @@ class PostsController < ApplicationController
 
   def new
     @post = Post.new
+    @post.comments.build
   end
 
   def create
     post = current_user.posts.create(post_params)
-    redirect_to root_path
+    redirect_to posts_path
     # Post.create(post_params).to_h.merge(user_id: current_user.id) end
     # redirect_to post
   end
 
   def edit
+  end
+
+  def show
+    @comment = Comment.new
+    # @post.comments.build
   end
 
   def update
@@ -27,13 +33,13 @@ class PostsController < ApplicationController
   def destroy
     user = @post.user
     @post.destroy
-    redirect_to user_posts_path(user)
+    redirect_to posts_path
   end
 
   private
 
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.require(:post).permit(:id, :title, :body, comments_attributes: [:id, :body])
   end
 
   def find_post
