@@ -21,5 +21,8 @@ module Blog
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    config.action_mailer.default_url_options = { host: "stoats.co.uk" }
+    # herokuapp.com/*appname*
+    # post_url(@post) would end up something like: http://stoats.co.uk/posts/3
   end
 end
