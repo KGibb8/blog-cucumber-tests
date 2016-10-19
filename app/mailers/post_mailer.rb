@@ -9,8 +9,8 @@ class PostMailer < ApplicationMailer
     @post = post
     @greeting = "Hi"
 
-    mail to: "to@example.org"
-  end
+    mail to: 'barvis.fuchschittehr@gmail.com'
+  nd
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:

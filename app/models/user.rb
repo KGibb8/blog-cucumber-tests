@@ -3,6 +3,8 @@ require './app/uploaders/avatar_uploader'
 class User < ApplicationRecord
   has_many :posts
   has_many :comments
+  has_many :likes
+  # has_many :post_likes, through: :likes, source: :post
   # This works in tandem with fields for 
   accepts_nested_attributes_for :comments
   # Add Avatar Uploader
