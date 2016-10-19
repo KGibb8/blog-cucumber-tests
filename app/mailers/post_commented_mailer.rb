@@ -1,0 +1,2 @@
+class PostCommentedMailer < ApplicationMailer
+end

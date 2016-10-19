@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :authorisation, only: [:update]
+  before_action :authorisation, only: [:update, :destroy]
 
   def create
     my_comment_params = comment_params.to_h.merge(post_id: params[:post_id])
@@ -14,9 +14,8 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    binding.pry
-    # @comment.destroy
-    render({json: "Deleted"})
+    @comment.destroy
+    render({json: {success: true}})
   end
 
   private

@@ -156,11 +156,12 @@ $(function () {
   $(".delBtn").on("click", function () {
     var commentId = $(this).attr("x-id");
     comment = $(this);
-  }).on("ajax:success", function (e, data, status, xhr) {
+    console.log(this);
+  }).parent().on("ajax:success", function (e, data, status, xhr) {
+    console.log(data);
     console.log(comment);
     comment.parent().parent().parent().remove();
   })
-
 })
 
 
