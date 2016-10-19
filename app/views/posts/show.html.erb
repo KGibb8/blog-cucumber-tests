@@ -90,7 +90,7 @@ textarea {
 
               <%# Comment text/body %>
               <div class="commentBody" id="commentBody_<%= comment.id %>">
-                <p><%= comment.body %></p>
+                <p><%= comment.body.html_safe %></p>
               </div>
 
               <%# Hidden form for updating comment %>
