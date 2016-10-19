@@ -35,6 +35,8 @@ group :development, :test do
   gem 'rb-readline'
   gem 'pry-byebug', platform: :mri
   gem 'faker'
+  gem 'letter_opener'
+  gem 'launchy'
 end
 
 group :test do
