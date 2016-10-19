@@ -14,3 +14,11 @@ Then(/^The comment is updated$/) do
   expect(page).to have_content @comment
 end
 
+Then(/^The comment is deleted$/) do
+    pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then(/^The deleted comment should not be present$/) do
+    pending # Write code here that turns the phrase above into concrete actions
+end
+

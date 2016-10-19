@@ -14,7 +14,9 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-
+    binding.pry
+    # @comment.destroy
+    render({json: "Deleted"})
   end
 
   private

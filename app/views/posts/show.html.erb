@@ -52,7 +52,7 @@
                       <%= f.text_area :body, id: "edit_comment_body" %>
                   </div>
                   <div class="submit">
-                    <%= f.submit "Update", class: 'submitButton' %>
+                    <%= f.submit "Update", class: 'submitButton', id: comment.id %>
                   </div>
                 <% end %>
                 </div>
@@ -62,9 +62,13 @@
               <%# Button to update comment%>
               <% if comment.user == current_user %>
                 <div id="edit_comment_button">
-                  <%= button_tag "Edit Comment", class: "editBtn" %>
+                    <button class="editBtn", id="editBtn_<%= comment.id %>" >Edit Comment</button>
+                  <%# <%= button_tag "Edit Comment", class: "editBtn", id: "editBtn_<%= comment.id %1>" %1> %>
                 </div>
-              <% end %>
+                <div id="delete_comment_button">
+                  <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn", "x-id": comment.id } %>
+               </div>
+             <% end %>
             </div>
 
           <% end %>
@@ -105,6 +109,9 @@
 
 
 <script>
+
+var comment;
+
 $(function () {
   var form = $("#new_comment");
   form.on("keydown", function (e) {
@@ -117,46 +124,45 @@ $(function () {
     console.log(e, data);
     var commentDiv = document.createElement("div");
     commentDiv.className = "commentContainer";
-
     commentDiv.innerHTML = '<p>' + data.body + '</p><p>' + data.user.email + '</p>' ;
     $("#comments").append(commentDiv);
   });
-})
-$(function () {
-  var form = $(".edit_comment");
+
+  form = $(".edit_comment");
   form.on("keydown", function (e) {
+    formId = e.currentTarget.id.toString().substring(13, 999);
+    subBtn = $(".submitButton")[0];
     if (e.keyCode == 13) {
-      $(".submitButton")[0].click();
+      subBtn.click();
+      $("#editBtn_" + formId).fadeIn();
+      $("#editBtn_" + formId).click();
     }
   });
   form.on("ajax:success", function (e, data, status, xhr) {
     $("#commentBody_" + data.id).children().replaceWith("<p>" + data.body + "</p>")
   });
-})
-var blank;
 
-$(function () {
   $(".editBtn").on("click", function () {
+    var Id = this.id.toString().substring(17, 999);
     var commentText = $(this).parent().parent().find(".commentText");
     if (commentText.hasClass("notEditing")) {
-      console.log("CLICKED");
       commentText.addClass("editing").removeClass("notEditing");
+      $(this).fadeOut();
     } else {
       commentText.addClass("notEditing").removeClass("editing");
     }
   });
-});
-<%# $(function () { %>
-    <%#   $(".editBtn").on("click", function () { %>
-        <%#     var form = $(this).parent().prev().prev(); %>
-          <%#     var body = $(this).parent().prev(); %>
-          <%#     form.toggle(); %>
-          <%#     body.toggle(); %>
-          <%#     <1%# if ($(form).is(':visible')) { %1> %>
-            <%#     <1%#   $(form).css('display','block'); %1> %>
-              <%#     <1%# } %1> %>
-              <%#   }) %>
-      <%# }); %>
+
+  $(".delBtn").on("click", function () {
+    var commentId = $(this).attr("x-id");
+    comment = $(this);
+  }).on("ajax:success", function (e, data, status, xhr) {
+    console.log(comment);
+    comment.parent().parent().parent().remove();
+  })
+
+})
+
 
 </script>
 

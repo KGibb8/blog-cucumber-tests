@@ -14,7 +14,6 @@ Feature: Comment
     Then The page contains "I'm no longer confused..."
     And A new comment is created
 
-  @wip
   @poltergeist
   Scenario: A user edits their comment
     Given sample users have been created
@@ -28,3 +27,16 @@ Feature: Comment
     And They press "ENTER" on "textarea"
     Then The page contains "I love biiiiiiiig butts and i cannot lie!"
     And The comment is updated
+
+  @wip
+  @poltergeist
+  Scenario: A user deletes their comment
+    Given sample users have been created
+    And They have logged in as "trevor@gmail.com"
+    And sample posts have been created
+    And sample comments have been created
+    And The "comment" belongs to the current user
+    When They navigate to the specific "post" page
+    And They click "Delete Comment" on "#delete_comment_button"
+    Then The comment is deleted
+    And The deleted comment should not be present
