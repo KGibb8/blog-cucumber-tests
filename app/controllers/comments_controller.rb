@@ -1,5 +1,5 @@
 class CommentsController < ApplicationController
-  before_action :find_comment, only: [:update]
+  before_action :authorisation, only: [:update]
 
   def create
     my_comment_params = comment_params.to_h.merge(post_id: params[:post_id])
@@ -13,10 +13,20 @@ class CommentsController < ApplicationController
     render({json: @comment, include: {user: {only: :email}}})
   end
 
+  def destroy
+
+  end
+
   private
 
-  def find_comment
+  def authorisation
     @comment = Comment.find(params[:id])
+    if @comment.user == current_user
+      @comment
+    else
+      flash[:notice] = "ERROREZ. Dis ain't belongin tu yousa"
+      nil
+    end
   end
 
   def comment_params

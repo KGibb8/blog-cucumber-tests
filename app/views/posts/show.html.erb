@@ -1,54 +1,4 @@
 <style>
-.submitButton {
-  <%# display: none; %>
-}
-.commentForm {
-  display: none;
-}
-.postLinks {
-  display: inline-block;
-  float: right;
-}
-.button {
-  margin-top: 1em;
-  margin-right: 1em;
-  display: inline-block;
-}
-textarea {
-  vertical-align: top;
-  margin-left: 1em;
-  margin-bottom: 1em;
-  display: inline-block;
-  width: 75%;
-  height: 100px;
-}
-#comments {
-  margin-top: 2em;
-}
-.submitButton {
-  float: right;
-}
-.commentContainer {
-  display: inline-block;
-    width: 100%;
-}
-.commentBody {
-  vertical-align: top;
-  margin-left: 1em;
-  display: inline-block;
-  width: 75%;
-  background-color: white;
-  margin-bottom: 1em;
-}
-.userProfile {
-  margin-right: 1em;
-  width: 15%;
-  display: inline-block;
-}
-.editBtn {
-  float: right;
-    margin-bottom: 1em;
-}
 </style>
 
 <div class="row">
@@ -84,32 +34,37 @@ textarea {
 
               <%# Comment's user details (display on left) %>
               <div class="userProfile">
-                <div class="userAvatar"><%#= image_tag(comment.user.avatar.icon.url) %></div>
+                <div class="userAvatar"><%= image_tag(comment.user.avatar.icon.url) unless comment.user.avatar.nil? %></div>
                 <div class="userName"><p><%= comment.user.email %></p></div>
               </div>
 
               <%# Comment text/body %>
-              <div class="commentBody" id="commentBody_<%= comment.id %>">
-                <p><%= comment.body.html_safe %></p>
-              </div>
+              <div class="commentText notEditing">
+                <div class="commentBody" id="commentBody_<%= comment.id %>">
+                  <p><%= comment.body.html_safe %></p>
+                </div>
 
-              <%# Hidden form for updating comment %>
-              <div class="commentForm" id="newComment_<%= comment.id %>">
-                <div class="textArea">
-                <%= form_for [@post, comment], remote: true, method: :patch do |f| %>
-                  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                  <%= f.text_area :body, id: "edit_comment_body" %>
-                </div>
-                <div class="submit">
-                  <%= f.submit "Update", class: 'submitButton' %>
-                </div>
+                <%# Hidden form for updating comment %>
+                <div class="commentForm" id="newComment_<%= comment.id %>">
+                  <div class="textArea">
+                    <%= form_for [@post, comment], remote: true, method: :patch do |f| %>
+                      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                      <%= f.text_area :body, id: "edit_comment_body" %>
+                  </div>
+                  <div class="submit">
+                    <%= f.submit "Update", class: 'submitButton' %>
+                  </div>
                 <% end %>
+                </div>
+
               </div>
 
               <%# Button to update comment%>
-              <div id="edit_comment_button">
-                <%= button_tag "Edit Comment", class: "editBtn" %>
-              </div>
+              <% if comment.user == current_user %>
+                <div id="edit_comment_button">
+                  <%= button_tag "Edit Comment", class: "editBtn" %>
+                </div>
+              <% end %>
             </div>
 
           <% end %>
@@ -125,7 +80,7 @@ textarea {
 <div class="row">
   <div class="col-md-2"></div>
   <div class="col-md-8">
-  <h2>Post a new comment</h2>
+    <h2>Post a new comment</h2>
     <%= form_for [@post, @comment], remote: true do |f| %>
       <%= f.text_area :body %><br>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
@@ -135,15 +90,15 @@ textarea {
   <div class="col-md-2"></div>
 </div>
 <%# <div class="row"> %>
-<%#   <div class="col-md-2"></div> %>
-<%#   <div class="col-md-8"> %>
-<%#     <h1>Nested Attributes Comments</h1> %>
-<%#     <%= form_for @post, remote: true do |f| %1> %>
-<%#       <%= f.fields_for :comments do |builder| %1> %>
-<%#         <%= render 'comment', f: builder %1><br> %>
-<%#       <% end %1> %>
-<%#       <%= f.submit %1><br><br> %>
-<%#     <% end %1> %>
+  <%#   <div class="col-md-2"></div> %>
+  <%#   <div class="col-md-8"> %>
+    <%#     <h1>Nested Attributes Comments</h1> %>
+    <%#     <%= form_for @post, remote: true do |f| %1> %>
+    <%#       <%= f.fields_for :comments do |builder| %1> %>
+    <%#         <%= render 'comment', f: builder %1><br> %>
+    <%#       <% end %1> %>
+  <%#       <%= f.submit %1><br><br> %>
+  <%#     <% end %1> %>
 <%#   </div> %>
 <%#   <div class="col-md-2"></div> %>
 <%# </div> %>
@@ -178,18 +133,30 @@ $(function () {
     $("#commentBody_" + data.id).children().replaceWith("<p>" + data.body + "</p>")
   });
 })
+var blank;
 
 $(function () {
   $(".editBtn").on("click", function () {
-    var form = $(this).parent().prev().prev();
-    var body = $(this).parent().prev();
-    form.toggle();
-    body.toggle();
-    if ($(form).is(':visible')) {
-      $(form).css('display','inline-block');
+    var commentText = $(this).parent().parent().find(".commentText");
+    if (commentText.hasClass("notEditing")) {
+      console.log("CLICKED");
+      commentText.addClass("editing").removeClass("notEditing");
+    } else {
+      commentText.addClass("notEditing").removeClass("editing");
     }
-  })
+  });
 });
+<%# $(function () { %>
+    <%#   $(".editBtn").on("click", function () { %>
+        <%#     var form = $(this).parent().prev().prev(); %>
+          <%#     var body = $(this).parent().prev(); %>
+          <%#     form.toggle(); %>
+          <%#     body.toggle(); %>
+          <%#     <1%# if ($(form).is(':visible')) { %1> %>
+            <%#     <1%#   $(form).css('display','block'); %1> %>
+              <%#     <1%# } %1> %>
+              <%#   }) %>
+      <%# }); %>
 
 </script>
 

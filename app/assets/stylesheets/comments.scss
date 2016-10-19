@@ -1,3 +1,69 @@
 // Place all the styles related to the comments controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.submitButton {
+  // display: none;
+}
+.commentForm {
+  display: none;
+}
+.postLinks {
+  display: inline-block;
+  float: right;
+}
+.button {
+  margin-top: 1em;
+  margin-right: 1em;
+  display: inline-block;
+}
+textarea {
+  vertical-align: top;
+  margin-left: 1em;
+  margin-bottom: 1em;
+  display: inline-block;
+  width: 100%;
+  height: 100px;
+}
+#comments {
+  margin-top: 2em;
+}
+.submitButton {
+  float: right;
+}
+.commentContainer {
+  display: inline-block;
+    width: 100%;
+}
+.commentBody {
+  margin-left: 1em;
+  display: inline-block;
+  background-color: white;
+  margin-bottom: 1em;
+}
+.userProfile {
+  margin-right: 3em;
+  width: 15%;
+  display: inline-block;
+}
+.editBtn {
+  float: right;
+    margin-bottom: 1em;
+}
+.commentText {
+  vertical-align: top;
+  display: inline-block;
+  width: 70%;
+  height: 100%;
+}
+.notEditing .commentBody {
+  display: block;
+}
+.notEditing .commentForm {
+  display: none;
+}
+.editing .commentBody {
+  display: none;
+}
+.editing .commentForm {
+  display: block;
+}

@@ -13,6 +13,30 @@
     <p class="alert"><%= alert %></p>
 
     <div class="container">
+      <nav>
+        <div class="row">
+          <ul>
+            <li class="col-md-2">
+              <% if current_user %>
+                <p>Signed in as <%= current_user.email %></p>
+              <% else %>
+                <%= link_to('Signup', new_user_registration_path) %>
+              <% end %>
+            </li>
+            <li class="col-md-2"></li>
+            <li class="col-md-2"></li>
+            <li class="col-md-2"></li>
+            <li class="col-md-2"></li>
+            <li class="col-md-2">
+              <% if current_user %>
+                <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>        
+              <% else %>
+                <%= link_to('Login', new_user_session_path)  %>  
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </nav>
       <%= yield %>
     </div>
 

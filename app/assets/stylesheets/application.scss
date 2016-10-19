@@ -12,3 +12,14 @@
  *
  */
 @import "bootstrap";
+@import "posts";
+@import "comments";
+
+nav {
+  ul {
+    list-style-type: none;
+    li {
+      list-style: none;
+    }
+  }
+}
