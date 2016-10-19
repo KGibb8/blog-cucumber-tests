@@ -15,10 +15,10 @@ Then(/^The comment is updated$/) do
 end
 
 Then(/^The comment is deleted$/) do
-    pending # Write code here that turns the phrase above into concrete actions
+  expect(@trev.comments.count).to eq(0)
 end
 
 Then(/^The deleted comment should not be present$/) do
-    pending # Write code here that turns the phrase above into concrete actions
+  pending # Write code here that turns the phrase above into concrete actions
 end
 

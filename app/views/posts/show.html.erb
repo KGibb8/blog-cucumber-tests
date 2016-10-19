@@ -1,4 +1,23 @@
 <style>
+.postLinks {
+  display: inline-block;
+}
+.likeBtnImg {
+  cursor: pointer;
+}
+.btn {
+  float: right;
+  margin-right: 1em;
+}
+#liked {
+  display: none;
+}
+#addLike {
+  display: none;
+}
+#likeBox {
+  display: inline-block;
+} 
 </style>
 
 <div class="row">
@@ -14,11 +33,25 @@
         <p><%= @post.body%></p>
       </div>
     </div>
-    <div class="postLinks">
-      <div class="button"><%= button_to "Edit post", edit_post_path(@post), method: :get %></div>
-      <div class="button"><%= button_to "Delete post", post_path(@post), method: :delete %></div>
+  </div>
+  <div class="col-md-2"></div>
+</div>
+
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-2">
+    <div id="likeBox">
+      <div id="likeCount"><%= @post.likes.count %></div>
+      <div class="like">
+        <div id="clickLike"><%= image_tag('like_icon_alt.png', class: 'likeBtnImg', id: @post.id) %></div>
+        <div id="clickUnlike"><%= image_tag('liked_icon_alt.png', class: 'likeBtnImg', id: @post.id) %></div>
+      </div>
+      <div id="addLike">+1</div>
     </div>
   </div>
+  <div class="col-md-2"></div>
+  <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Edit post", edit_post_path(@post), method: :get, class: 'btn' %><% end %></div>
+  <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Delete post", post_path(@post), method: :delete, class: 'btn' %><% end %></div>
   <div class="col-md-2"></div>
 </div>
 
@@ -62,13 +95,13 @@
               <%# Button to update comment%>
               <% if comment.user == current_user %>
                 <div id="edit_comment_button">
-                    <button class="editBtn", id="editBtn_<%= comment.id %>" >Edit Comment</button>
+                  <button class="editBtn btn", id="editBtn_<%= comment.id %>" >Edit Comment</button>
                   <%# <%= button_tag "Edit Comment", class: "editBtn", id: "editBtn_<%= comment.id %1>" %1> %>
                 </div>
                 <div id="delete_comment_button">
-                  <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn", "x-id": comment.id } %>
-               </div>
-             <% end %>
+                  <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn btn", "x-id": comment.id } %>
+                </div>
+              <% end %>
             </div>
 
           <% end %>
@@ -88,11 +121,12 @@
     <%= form_for [@post, @comment], remote: true do |f| %>
       <%= f.text_area :body %><br>
       <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-      <%= f.submit "Comment", class:"submitButton" %>
+      <%= f.submit "Comment", class:"submitCommentButton btn" %>
     <% end %>
   </div>
   <div class="col-md-2"></div>
 </div>
+
 <%# <div class="row"> %>
   <%#   <div class="col-md-2"></div> %>
   <%#   <div class="col-md-8"> %>
@@ -110,7 +144,7 @@
 
 <script>
 
-var comment;
+var csrf = $("meta[name=csrf-token]").attr("content");
 
 $(function () {
   var form = $("#new_comment");
@@ -162,7 +196,40 @@ $(function () {
     console.log(comment);
     comment.parent().parent().parent().remove();
   })
+
+  $(".likeBtnImg").on("click", function () {
+    var data = {post_id: this.id};
+    $.ajax({
+      type: 'POST',
+      url: '/likes',
+      authenticity_token: csrf,
+      data: data
+    }).done(function (response) {
+      console.log(data);
+      console.log(this)
+        var likeBox = $(".likeBtnImg").parent().parent();
+      var clickLike = $("#clickLike");
+      var addLike = $("#addLike");
+      console.log(likeBox);
+      if (likeBox.hasClass("like")) {
+        likeBox.addClass("unlike").removeClass("like");
+        $(clickLike).css("display", "none");
+        addLike.fadeIn().css("display","inline-block");;
+      } else {
+        likeBox.addClass("like").removeClass("unlike");
+        $(clickLike).css("display", "inline-block");
+        addLike.fadeOut();
+      }
+    });
+  });
+
+  $(".likeBtn").on("click", function () {
+    console.log(this);
+  }).parent().on("ajax:success", function (e, data, status, xhr) {
+    console.log(data);
+  });
 })
+
 
 
 </script>

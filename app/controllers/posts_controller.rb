@@ -3,6 +3,9 @@ class PostsController < ApplicationController
   
   def index 
     @posts = Post.all
+    @my_posts = current_user.posts
+    @commented_posts = current_user.comments.map(&:post).uniq
+    @post = Post.new
   end
 
   def new
@@ -22,6 +25,7 @@ class PostsController < ApplicationController
 
   def show
     @comment = Comment.new
+    @like = Like.new
     # @post.comments.build
   end
 

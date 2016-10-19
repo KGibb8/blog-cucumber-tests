@@ -67,3 +67,15 @@ textarea {
 .editing .commentForm {
   display: block;
 }
+.like #clickLike {
+  display: block;
+}
+.like #clickUnlike {
+  display: none;
+}
+.unlike #clickLike {
+  display: none;
+}
+.unlike #clickLike {
+  display: block;
+}

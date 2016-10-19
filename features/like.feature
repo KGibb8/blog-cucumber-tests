@@ -13,12 +13,12 @@ Feature: Like
   @poltergeist
   Scenario: Corey likes Trevor's post
     When They navigate to the specific "post" page
-    And they click "Like"
+    And They click "Like"
     Then A new like is created
     And The page contains "Liked"
 
   Scenario: Corey unlikes Trevor's post
     When They navigate to the specific "post" page
-    And they click "Like"
+    And They click "Like"
     Then The like is deleted
     And The page contains "Like"
