@@ -4,7 +4,10 @@ class CommentsController < ApplicationController
   def create
     my_comment_params = comment_params.to_h.merge(post_id: params[:post_id])
     comment = current_user.comments.create(my_comment_params)
-    render({json: comment, include: {user: {only: :email}}})
+    comment.user.avatar = comment.user.avatar.icon.url
+    render({json: {comment: comment, user: current_user}})
+    # render({json: comment, json: current_user})
+    # render({json: comment, include: {user: {only: [:email, :avatar]}}})
   end
   
   def update

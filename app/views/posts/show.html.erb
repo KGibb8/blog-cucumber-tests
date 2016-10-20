@@ -1,16 +1,3 @@
-<style>
-.postLinks {
-  display: inline-block;
-}
-.likeBtnImg {
-  cursor: pointer;
-}
-.btn {
-  float: right;
-  margin-right: 1em;
-}
-
-</style>
 
 <div class="row">
   <div class="col-md-2"></div>
@@ -42,7 +29,11 @@
           <div id="clickLike"><%= image_tag('like_icon_alt.png', alt: "Like", class: 'likeBtnImg', id: @post.id) %></div>
           <div id="clickUnlike"><%= image_tag('liked_icon_alt.png', alt: "Unlike", class: 'likeBtnImg', id: @post.id) %></div>
         </div>
-      <div id="addLike">+1</div>
+      <% unless current_user.likes.map(&:post_id).include? @post.id %>
+        <div id="addLike"></div>
+      <% else %>
+        <div id="addLike">+1</div>
+      <% end %>
     </div>
   </div>
   <div class="col-md-2"></div>
@@ -57,32 +48,28 @@
     <div id="comments">
       <% unless @post.comments.empty? %>
 
-        <% @post.comments.each do |comment| %>
+        <% @post_comments.each do |comment| %>
           <% unless comment.user.nil? %>
             <div class="commentContainer" id="commentContainer_<%= comment.id %>">
 
               <%# Comment's user details (display on left) %>
               <div class="userProfile">
-                <div class="userAvatar"><%= image_tag(comment.user.avatar.icon.url) unless comment.user.avatar.nil? %></div>
-                <div class="userName"><p><%= comment.user.email %></p></div>
+                <%= image_tag(comment.user.avatar.icon.url, class: 'userAvatar') unless comment.user.avatar.nil? %>
+                <p class="userName"><%= comment.user.email %></p>
               </div>
 
               <%# Comment text/body %>
               <div class="commentText notEditing">
-                <div class="commentBody" id="commentBody_<%= comment.id %>">
-                  <p><%= comment.body.html_safe %></p>
+                <div class="commentBody">
+                  <p id="commentBody_<%= comment.id %>"><%= comment.body.html_safe %></p>
                 </div>
 
                 <%# Hidden form for updating comment %>
-                <div class="commentForm" id="newComment_<%= comment.id %>">
-                  <div class="textArea">
-                    <%= form_for [@post, comment], remote: true, method: :patch do |f| %>
-                      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                      <%= f.text_area :body, id: "edit_comment_body" %>
-                  </div>
-                  <div class="submit">
+                <div class="commentForm">
+                   <%= form_for [@post, comment], remote: true, method: :patch do |f| %>
+                    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                    <%= f.text_area :body, id: "edit_comment_body" %>
                     <%= f.submit "Update", class: 'submitButton', id: comment.id %>
-                  </div>
                 <% end %>
                 </div>
 
@@ -90,13 +77,10 @@
 
               <%# Button to update comment%>
               <% if comment.user == current_user %>
-                <div id="edit_comment_button">
+                <%# TODO: Fix these buttons so we use Ruby %>
                   <button class="editBtn btn", id="editBtn_<%= comment.id %>" >Edit Comment</button>
                   <%# <%= button_tag "Edit Comment", class: "editBtn", id: "editBtn_<%= comment.id %1>" %1> %>
-                </div>
-                <div id="delete_comment_button">
                   <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn btn", "x-id": comment.id } %>
-                </div>
               <% end %>
             </div>
 
@@ -142,27 +126,53 @@
 <script>
 
 var csrf = $("meta[name=csrf-token]").attr("content");
-
+var woof;
 $(function () {
   var form = $("#new_comment");
   form.on("keydown", function (e) {
-    console.log(e.keyCode);
     if (e.keyCode == 13) {
       $(".submitButton")[1].click();
     }
   });
   form.on("ajax:success", function (e, data) {
-    console.log(e, data);
-    var commentDiv = document.createElement("div");
-    commentDiv.className = "commentContainer";
-    commentDiv.innerHTML = '<p>' + data.body + '</p><p>' + data.user.email + '</p>' ;
-    $("#comments").append(commentDiv);
+    console.log(data);
+    // Comment Container
+    var commentContainer = document.createElement("div");
+    commentContainer.className = "commentContainer";
+    commentContainer.setAttribute("id", "commentContainer_" + data.comment.id);
+    // Avatar Img 
+    var userAvatar = document.createElement("img");
+    userAvatar.setAttribute("src", data.user.avatar.icon.url);
+    // Username
+    var userName = document.createElement("p")
+    userName.innerHTML = data.user.email
+    // userProfile container
+    var userProfile = document.createElement("div");
+    userProfile.className = "userProfile";
+    userProfile.appendChild(userAvatar)
+    userProfile.appendChild(userName);
+    commentContainer.appendChild(userProfile);
+
+    var commentBody = document.createElement("p")
+    commentBody.setAttribute("id", "commentBody_" + data.comment.id);
+    commentBody.innerHTML = data.comment.body;
+
+    var commentText = document.createElement("div");
+    commentText.className = "commentText notEditing";
+
+    commentText.appendChild(commentBody);
+    commentContainer.appendChild(commentText);
+    $("#comments").append(commentContainer);
+
+    <%# TODO: Write recursive algorithm that clones the element and changes the id and content based on new information %>
+    <%# TODO: Using JQuery $("commentContainer").clone(); %>
   });
+
 
   form = $(".edit_comment");
   form.on("keydown", function (e) {
+    subBtn = $(e.currentTarget).parent().parent().find('.submitButton')[0];
     formId = e.currentTarget.id.toString().substring(13, 999);
-    subBtn = $(".submitButton")[0];
     if (e.keyCode == 13) {
       subBtn.click();
       $("#editBtn_" + formId).fadeIn();
@@ -170,12 +180,12 @@ $(function () {
     }
   });
   form.on("ajax:success", function (e, data, status, xhr) {
-    $("#commentBody_" + data.id).children().replaceWith("<p>" + data.body + "</p>")
+    $("#commentBody_" + data.id).replaceWith(data.body)
   });
 
   $(".editBtn").on("click", function () {
     var Id = this.id.toString().substring(17, 999);
-    var commentText = $(this).parent().parent().find(".commentText");
+    var commentText = $(this).parent().find(".commentText");
     if (commentText.hasClass("notEditing")) {
       commentText.addClass("editing").removeClass("notEditing");
       $(this).fadeOut();
@@ -187,11 +197,8 @@ $(function () {
   $(".delBtn").on("click", function () {
     var commentId = $(this).attr("x-id");
     comment = $(this);
-    console.log(this);
   }).parent().on("ajax:success", function (e, data, status, xhr) {
-    console.log(data);
-    console.log(comment);
-    comment.parent().parent().parent().remove();
+    comment.parent().parent().remove();
   })
 
   $(".likeBtnImg").on("click", function () {
@@ -221,9 +228,7 @@ $(function () {
   });
 
   $(".likeBtn").on("click", function () {
-    console.log(this);
   }).parent().on("ajax:success", function (e, data, status, xhr) {
-    console.log(data);
   });
 })
 

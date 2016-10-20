@@ -25,6 +25,7 @@ class PostsController < ApplicationController
 
   def show
     @comment = Comment.new
+    @post_comments = @post.comments.order(:created_at)
     @like = Like.new
     # @post.comments.build
   end
@@ -36,6 +37,8 @@ class PostsController < ApplicationController
 
   def destroy
     user = @post.user
+    @post.comments.destroy_all
+    @post.likes.destroy_all
     @post.destroy
     redirect_to posts_path
   end
