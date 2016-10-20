@@ -19,3 +19,4 @@ coverage
 # Ignore vim backup files
 *.swp
 *.swo
+*.swm

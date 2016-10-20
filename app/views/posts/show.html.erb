@@ -11,6 +11,11 @@
         <h1><%= @post.title %></h1>
         <p><%= @post.body%></p>
       </div>
+      <div class="tags">
+        <% @post.tags.each do |tag| %>
+          <div id="tag_<%= tag.id %>"><%= button_to tag.name, tag_path(tag), class: "btn" %></div>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="col-md-2"></div>
