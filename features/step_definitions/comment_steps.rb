@@ -11,7 +11,7 @@ When(/^The "([^"]*)" belongs to the current user$/) do |arg1|
 end
 
 Then(/^The comment is updated$/) do
-  expect(page).to have_content @comment
+  expect(page).to have_content @comment.body
 end
 
 Then(/^The comment is deleted$/) do

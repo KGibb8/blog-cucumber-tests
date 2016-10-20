@@ -11,14 +11,17 @@ Feature: Like
 
   @wip
   @poltergeist
-  Scenario: Corey likes Trevor's post
+  Scenario: Trevor likes Corey's post
     When They navigate to the specific "post" page
-    And They click "Like"
-    Then A new like is created
-    And The page contains "Liked"
-
-  Scenario: Corey unlikes Trevor's post
+    And They click the "Like" image
+    And A new like is created
+    Then The image alt_text reads "Unlike"
+    
+  @wip
+  @poltergeist
+  Scenario: Trevor unlikes Corey's post
+    Given Corey likes Trevor's post
     When They navigate to the specific "post" page
-    And They click "Like"
+    And They click the "Unlike" image
     Then The like is deleted
-    And The page contains "Like"
+    And The image alt_text reads "Like"

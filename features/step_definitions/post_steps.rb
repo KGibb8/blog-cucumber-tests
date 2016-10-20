@@ -42,6 +42,7 @@ end
 
 
 When(/^They click "([^"]*)"$/) do |this|
+  binding.pry
   click_on this
 end
 
@@ -73,13 +74,11 @@ end
 
 Then(/^The page contains "([^"]*)"$/) do |content|
   # save_and_open_page
-  binding.pry
   expect(page).to have_content(content)
-  save_and_open_page
 end
 
 Then(/^They are redirected to the specific "([^"]*)" page$/) do |page|
-  expect(current_path).to eq(get_named_route(page, @corey.posts.last))
+  expect(current_path).to eq(get_named_route(page, @post))
 end
 
 
@@ -95,7 +94,6 @@ end
 
 Then(/^The deleted post should not be present$/) do
   expect(page).to_not have_content(@post)
-  save_and_open_page
 end
 
 

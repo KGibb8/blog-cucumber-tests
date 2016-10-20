@@ -15,7 +15,7 @@ class PostsController < ApplicationController
 
   def create
     post = current_user.posts.create(post_params)
-    redirect_to posts_path
+    redirect_to post_path(post)
     # Post.create(post_params).to_h.merge(user_id: current_user.id) end
     # redirect_to post
   end

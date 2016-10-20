@@ -16,9 +16,9 @@ Feature: Post
     And They fill in the "post_body" field with "Corey goes to the store"
     And They click "Create"
     Then A new post is created
-    And They are redirected to the "posts" page
+    And They are redirected to the specific "post" page
     And The page contains "Corey goes to the store"
-    And The page contains "Corey goes to the store" in ".posts"
+    And The page contains "Corey goes to the store" in ".postContent"
 
   Scenario: Corey edits any one of his posts
     When They navigate to the specific "post" page

@@ -9,15 +9,7 @@
   float: right;
   margin-right: 1em;
 }
-#liked {
-  display: none;
-}
-#addLike {
-  display: none;
-}
-#likeBox {
-  display: inline-block;
-} 
+
 </style>
 
 <div class="row">
@@ -42,10 +34,14 @@
   <div class="col-md-2">
     <div id="likeBox">
       <div id="likeCount"><%= @post.likes.count %></div>
-      <div class="like">
-        <div id="clickLike"><%= image_tag('like_icon_alt.png', class: 'likeBtnImg', id: @post.id) %></div>
-        <div id="clickUnlike"><%= image_tag('liked_icon_alt.png', class: 'likeBtnImg', id: @post.id) %></div>
-      </div>
+      <% unless current_user.likes.map(&:post_id).include? @post.id %>
+        <div class="like">
+      <% else %>
+        <div class="unlike">
+      <% end %>
+          <div id="clickLike"><%= image_tag('like_icon_alt.png', alt: "Like", class: 'likeBtnImg', id: @post.id) %></div>
+          <div id="clickUnlike"><%= image_tag('liked_icon_alt.png', alt: "Unlike", class: 'likeBtnImg', id: @post.id) %></div>
+        </div>
       <div id="addLike">+1</div>
     </div>
   </div>
@@ -127,6 +123,7 @@
   <div class="col-md-2"></div>
 </div>
 
+<br>
 <%# <div class="row"> %>
   <%#   <div class="col-md-2"></div> %>
   <%#   <div class="col-md-8"> %>
@@ -205,20 +202,20 @@ $(function () {
       authenticity_token: csrf,
       data: data
     }).done(function (response) {
-      console.log(data);
-      console.log(this)
-        var likeBox = $(".likeBtnImg").parent().parent();
+      var likeBox = $(".likeBtnImg").parent().parent();
       var clickLike = $("#clickLike");
       var addLike = $("#addLike");
-      console.log(likeBox);
+      var likeCount = $('#likeCount')
       if (likeBox.hasClass("like")) {
         likeBox.addClass("unlike").removeClass("like");
         $(clickLike).css("display", "none");
         addLike.fadeIn().css("display","inline-block");;
+        likeCount.text((parseInt(likeCount.text()) + 1).toString())
       } else {
         likeBox.addClass("like").removeClass("unlike");
         $(clickLike).css("display", "inline-block");
         addLike.fadeOut();
+        likeCount.text((parseInt(likeCount.text()) - 1).toString())
       }
     });
   });
