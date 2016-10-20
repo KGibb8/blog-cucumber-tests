@@ -11,11 +11,6 @@
         <h1><%= @post.title %></h1>
         <p><%= @post.body%></p>
       </div>
-      <div class="tags">
-        <% @post.tags.each do |tag| %>
-          <div id="tag_<%= tag.id %>"><%= button_to tag.name, tag_path(tag), class: "btn" %></div>
-        <% end %>
-      </div>
     </div>
   </div>
   <div class="col-md-2"></div>
@@ -23,6 +18,13 @@
 
 <div class="row">
   <div class="col-md-2"></div>
+  <div class="col-md-6">
+    <div class="tags">
+      <% @post.tags.each do |tag| %>
+        <div id="tag_<%= tag.id %>"><%= button_to tag.name, tag_path(tag), method: :get, class: "btn" %></div>
+      <% end %>
+    </div>
+  </div>
   <div class="col-md-2">
     <div id="likeBox">
       <div id="likeCount"><%= @post.likes.count %></div>
@@ -42,6 +44,10 @@
     </div>
   </div>
   <div class="col-md-2"></div>
+</div>
+
+<div class="row">
+  <div class="col-md-6"></div>
   <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Edit post", edit_post_path(@post), method: :get, class: 'btn' %><% end %></div>
   <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Delete post", post_path(@post), method: :delete, class: 'btn' %><% end %></div>
   <div class="col-md-2"></div>
