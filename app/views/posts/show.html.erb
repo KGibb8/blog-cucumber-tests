@@ -8,7 +8,8 @@
         <div class="userName"></div>
       </div>
       <div class="postContent">
-        <h1><%= @post.title %></h1>
+        <h1><%= @post.title %></h1><br>
+        <div class="header"><%= image_tag(@post.pictures[0].header.url) %></div><br>
         <p><%= @post.body%></p>
       </div>
     </div>

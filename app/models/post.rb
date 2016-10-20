@@ -6,4 +6,5 @@ class Post < ApplicationRecord
   has_many :likes
 
   # has_many :user_likes, through: :likes, source: :user
+  mount_uploaders :pictures, PictureUploader
 end
