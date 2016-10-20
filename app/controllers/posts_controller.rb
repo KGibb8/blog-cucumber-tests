@@ -2,10 +2,12 @@ class PostsController < ApplicationController
   before_action :find_post, only: [:show, :edit, :update, :destroy]
   
   def index 
+    @tags = Tag.all.order(:name)
     @posts = Post.all
     @my_posts = current_user.posts
     @commented_posts = current_user.comments.map(&:post).uniq
     @post = Post.new
+    @post.tags.build
   end
 
   def new
@@ -14,6 +16,7 @@ class PostsController < ApplicationController
   end
 
   def create
+    binding.pry
     post = current_user.posts.create(post_params)
     redirect_to post_path(post)
     # Post.create(post_params).to_h.merge(user_id: current_user.id) end
@@ -21,6 +24,8 @@ class PostsController < ApplicationController
   end
 
   def edit
+    @tags = Tag.all.order(:name)
+    @post.taggings.build
   end
 
   def show
@@ -31,6 +36,7 @@ class PostsController < ApplicationController
   end
 
   def update
+    binding.pry
     @post.update(post_params)
     redirect_to @post
   end
@@ -46,7 +52,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:id, :title, :body, comments_attributes: [:id, :body])
+    params.require(:post).permit(:id, :title, :body, {tag_ids: [] }) #, tags_attributes: [:id, :name])
   end
 
   def find_post
