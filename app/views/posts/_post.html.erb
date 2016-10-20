@@ -11,6 +11,7 @@
     </div>
   </div>
   <div class="col-md-6">
+      <p>Add Tags</p>
     <%= f.collection_check_boxes(:tag_ids, @tags, :id, :name) do |b| %>
       <%= b.label(class: "check_box") do %>
         <%= b.check_box(class: "check_box") %>
@@ -23,7 +24,7 @@
   <div class="col-md-6"></div>
   <div class="col-md-4"></div>
   <div class="col-md-2">
-    <%= f.submit %>
+    <%= f.submit %><br>
   <% end %>
   </div>
-</div>
+</div><br>

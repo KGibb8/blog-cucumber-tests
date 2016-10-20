@@ -16,7 +16,6 @@ class PostsController < ApplicationController
   end
 
   def create
-    binding.pry
     post = current_user.posts.create(post_params)
     redirect_to post_path(post)
     # Post.create(post_params).to_h.merge(user_id: current_user.id) end
@@ -36,7 +35,6 @@ class PostsController < ApplicationController
   end
 
   def update
-    binding.pry
     @post.update(post_params)
     redirect_to @post
   end
