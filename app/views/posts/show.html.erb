@@ -46,12 +46,16 @@
   <div class="col-md-2"></div>
 </div>
 
+<br>
+
 <div class="row">
   <div class="col-md-6"></div>
   <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Edit post", edit_post_path(@post), method: :get, class: 'btn' %><% end %></div>
   <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Delete post", post_path(@post), method: :delete, class: 'btn' %><% end %></div>
   <div class="col-md-2"></div>
 </div>
+
+<br>
 
 <div class="row">
   <div class="col-md-2"></div>
