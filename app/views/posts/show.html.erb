@@ -163,7 +163,6 @@ $(function () {
     $(root[0]).find("#commentBody_" + data.comment.id).replaceWith(data.comment.body);
     // TODO : Just in case the above button_for solution has issues, here's where the problem may lie
     $(root[0]).find('textarea[id="edit_comment_body"]').html(data.comment.body);
-    debugger
     $("#comments").append(root[0]);
   });
 
