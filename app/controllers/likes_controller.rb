@@ -1,14 +1,16 @@
 class LikesController < ApplicationController
 
   def create
-    like = Like.find_by(post_id: params[:post_id])
+    # params.merge(user_id: current_user.id)
+    like = Like.find_by(post_id: params[:post_id], user_id: current_user.id)
     # like = Like.find_by(user_id: current_user.id, post_id: params[:format])
     unless like
       # current_user.likes.create(post_id: params[:format])
-      current_user.likes.create(post_id: params[:post_id])
+      like = current_user.likes.create(post_id: params[:post_id])
     else
       like.destroy
     end
+    ActionCable.server.broadcast("post_channel", message: {post_id: like.post_id, count: like.post.likes.count})
     render({json: {success: true}})
   end
 

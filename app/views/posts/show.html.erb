@@ -28,8 +28,9 @@
   </div>
   <div class="col-md-2">
     <div id="likeBox">
-      <div id="likeCount"><%= @post.likes.count %></div>
-      <% unless current_user.likes.map(&:post_id).include? @post.id %>
+      <div id="likeCount"><p><%= "<span id='like#{@post.id}'>#{@post.likes.count}</span>".html_safe %></p></div>
+      <%# <p><%= "<span id='like#{post.id}'>#{post.likes.count}</span>".html_safe %1></p> %>
+      <% unless current_user && current_user.likes.map(&:post_id).include?(@post.id) %>
         <div class="like">
       <% else %>
         <div class="unlike">
@@ -37,7 +38,7 @@
           <div id="clickLike"><%= image_tag('like_icon_alt.png', alt: "Like", class: 'likeBtnImg', id: @post.id) %></div>
           <div id="clickUnlike"><%= image_tag('liked_icon_alt.png', alt: "Unlike", class: 'likeBtnImg', id: @post.id) %></div>
         </div>
-      <% unless current_user.likes.map(&:post_id).include? @post.id %>
+      <% unless current_user && current_user.likes.map(&:post_id).include?( @post.id) %>
         <div id="addLike"></div>
       <% else %>
         <div id="addLike">+1</div>
@@ -51,8 +52,8 @@
 
 <div class="row">
   <div class="col-md-6"></div>
-  <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Edit post", edit_post_path(@post), method: :get, class: 'btn' %><% end %></div>
-  <div class="col-md-2"><% if current_user.posts.include? @post %><%= button_to "Delete post", post_path(@post), method: :delete, class: 'btn' %><% end %></div>
+  <div class="col-md-2"><% if current_user && current_user.posts.include?(@post) %><%= button_to "Edit post", edit_post_path(@post), method: :get, class: 'btn' %><% end %></div>
+  <div class="col-md-2"><% if current_user && current_user.posts.include?(@post) %><%= button_to "Delete post", post_path(@post), method: :delete, class: 'btn' %><% end %></div>
   <div class="col-md-2"></div>
 </div>
 
@@ -211,17 +212,14 @@ $(function () {
       var likeBox = $(".likeBtnImg").parent().parent();
       var clickLike = $("#clickLike");
       var addLike = $("#addLike");
-      var likeCount = $('#likeCount')
       if (likeBox.hasClass("like")) {
         likeBox.addClass("unlike").removeClass("like");
         $(clickLike).css("display", "none");
         addLike.fadeIn().css("display","inline-block");;
-        likeCount.text((parseInt(likeCount.text()) + 1).toString())
       } else {
         likeBox.addClass("like").removeClass("unlike");
         $(clickLike).css("display", "inline-block");
         addLike.fadeOut();
-        likeCount.text((parseInt(likeCount.text()) - 1).toString())
       }
     });
   });
@@ -258,4 +256,3 @@ $(function () {
 
 
 </script>
-
