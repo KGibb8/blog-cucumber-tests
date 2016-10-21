@@ -178,7 +178,7 @@ $(function () {
     }
   });
   form.on("ajax:success", function (e, data, status, xhr) {
-    $("#commentBody_" + data.id).replaceWith(data.body)
+    $("#commentBody_" + data.id).html(data.body);
   });
 
   $(".editBtn").on("click", function () {
@@ -231,7 +231,6 @@ $(function () {
   });
 
   var recurse = function (node, newId) {
-    console.log(node);
     if (newId != undefined) {
       var newId = newId.toString();
       if (node.children()) {
@@ -243,7 +242,6 @@ $(function () {
       if (nodeId != null) {
         var prefix = node[0].id.substring(0, node[0].id.lastIndexOf("_") + 1);
         node[0].id = prefix + newId;
-        console.log(prefix, node[0].id);
       }
       var action = node[0].getAttribute("action");
       if (action) {
