@@ -143,8 +143,10 @@
 
 <script>
 
+var formId;
 var csrf = $("meta[name=csrf-token]").attr("content");
-var woof;
+var commentBody;
+
 $(function () {
   var form = $("#new_comment");
   form.on("keydown", function (e) {
@@ -153,37 +155,14 @@ $(function () {
     }
   });
   form.on("ajax:success", function (e, data) {
-    console.log(data);
-    // Comment Container
-    var commentContainer = document.createElement("div");
-    commentContainer.className = "commentContainer";
-    commentContainer.setAttribute("id", "commentContainer_" + data.comment.id);
-    // Avatar Img 
-    var userAvatar = document.createElement("img");
-    userAvatar.setAttribute("src", data.user.avatar.icon.url);
-    // Username
-    var userName = document.createElement("p")
-    userName.innerHTML = data.user.email
-    // userProfile container
-    var userProfile = document.createElement("div");
-    userProfile.className = "userProfile";
-    userProfile.appendChild(userAvatar)
-    userProfile.appendChild(userName);
-    commentContainer.appendChild(userProfile);
+    // Append New Comment!
+    var root = $(".commentContainer").clone()
+    recurse($(root[0]), data.comment.id)
+    $(root[0]).find(".userAvatar").attr("src", data.user.avatar.icon.url);
+    $(root[0]).find(".userName").replaceWith(data.user.email);
+    $(root[0]).find("#commentBody_" + data.comment.id).replaceWith(data.comment.body);
+    $("#comments").append(root[0]);
 
-    var commentBody = document.createElement("p")
-    commentBody.setAttribute("id", "commentBody_" + data.comment.id);
-    commentBody.innerHTML = data.comment.body;
-
-    var commentText = document.createElement("div");
-    commentText.className = "commentText notEditing";
-
-    commentText.appendChild(commentBody);
-    commentContainer.appendChild(commentText);
-    $("#comments").append(commentContainer);
-
-    <%# TODO: Write recursive algorithm that clones the element and changes the id and content based on new information %>
-    <%# TODO: Using JQuery $("commentContainer").clone(); %>
   });
 
 
@@ -193,8 +172,9 @@ $(function () {
     formId = e.currentTarget.id.toString().substring(13, 999);
     if (e.keyCode == 13) {
       subBtn.click();
-      $("#editBtn_" + formId).fadeIn();
-      $("#editBtn_" + formId).click();
+      var editBtn = $(".editBtn").filter("#editBtn_" + formId)
+      editBtn.fadeIn();
+      editBtn.click();
     }
   });
   form.on("ajax:success", function (e, data, status, xhr) {
@@ -216,6 +196,7 @@ $(function () {
     var commentId = $(this).attr("x-id");
     comment = $(this);
   }).parent().on("ajax:success", function (e, data, status, xhr) {
+    debugger
     comment.parent().parent().remove();
   })
 
@@ -248,8 +229,34 @@ $(function () {
   $(".likeBtn").on("click", function () {
   }).parent().on("ajax:success", function (e, data, status, xhr) {
   });
-})
 
+  var recurse = function (node, newId) {
+    console.log(node);
+    if (newId != undefined) {
+      var newId = newId.toString();
+      if (node.children()) {
+        for (var i = 0 ; i < node.children().length ; ++i) {
+          recurse($(node.children()[i]), newId);
+        }
+      }
+      var nodeId = node[0].id;
+      if (nodeId != null) {
+        var prefix = node[0].id.substring(0, node[0].id.lastIndexOf("_") + 1);
+        node[0].id = prefix + newId;
+        console.log(prefix, node[0].id);
+      }
+      var action = node[0].getAttribute("action");
+      if (action) {
+        var prefix = action.substring(0, action.lastIndexOf("/") + 1);
+        node.attr("action", prefix + newId);
+      }
+      var xid = node[0].getAttribute("x-id");
+      if (xid) {
+        node.attr("x-id", newId);
+      }
+    }
+  }
+})
 
 
 </script>
