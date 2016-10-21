@@ -93,9 +93,9 @@
 
               <%# Button to update comment%>
               <% if comment.user == current_user %>
-                <%# TODO: Fix these buttons so we use Ruby %>
+                <%# TODO: Fix these buttons and the text area field will be edited on the fly by our comment builder %>
                   <button class="editBtn btn", id="editBtn_<%= comment.id %>" >Edit Comment</button>
-                  <%# <%= button_tag "Edit Comment", class: "editBtn", id: "editBtn_<%= comment.id %1>" %1> %>
+                  <%# <%= button_to "Edit Comment", post_comment_path(@post, comment), {remote: true, method: :patch, class: "editBtn btn", id: "editBtn_#{comment.id}} %1> %>
                   <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn btn", "x-id": comment.id } %>
                   <%# <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn btn", "x-id": comment.id } %1> %>
               <% end %>
@@ -160,12 +160,13 @@ $(function () {
     $(root[0]).find(".userAvatar").attr("src", data.user.avatar.icon.url);
     $(root[0]).find(".userName").replaceWith(data.user.email);
     $(root[0]).find("#commentBody_" + data.comment.id).replaceWith(data.comment.body);
+    // TODO : Just in case the above button_for solution has issues, here's where the problem may lie
+    $(root[0]).find('textarea[id="edit_comment_body"]').html(data.comment.body);
+    debugger
     $("#comments").append(root[0]);
-
   });
 
 
-  <%# form = $(".edit_comment"); %>
   $("#comments").on("keydown", ".edit_comment", function (e) {
     subBtn = $(e.currentTarget).parent().parent().find('.submitButton')[0];
     formId = e.currentTarget.id.toString().substring(13, 999);
