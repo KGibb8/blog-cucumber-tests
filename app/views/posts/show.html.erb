@@ -97,6 +97,7 @@
                   <button class="editBtn btn", id="editBtn_<%= comment.id %>" >Edit Comment</button>
                   <%# <%= button_tag "Edit Comment", class: "editBtn", id: "editBtn_<%= comment.id %1>" %1> %>
                   <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn btn", "x-id": comment.id } %>
+                  <%# <%= button_to "Delete Comment", post_comment_path(@post, comment), {remote: true, method: :delete, class: "delBtn btn", "x-id": comment.id } %1> %>
               <% end %>
             </div>
 
@@ -143,9 +144,7 @@
 
 <script>
 
-var formId;
 var csrf = $("meta[name=csrf-token]").attr("content");
-var commentBody;
 
 $(function () {
   var form = $("#new_comment");
@@ -166,8 +165,8 @@ $(function () {
   });
 
 
-  form = $(".edit_comment");
-  form.on("keydown", function (e) {
+  <%# form = $(".edit_comment"); %>
+  $("#comments").on("keydown", ".edit_comment", function (e) {
     subBtn = $(e.currentTarget).parent().parent().find('.submitButton')[0];
     formId = e.currentTarget.id.toString().substring(13, 999);
     if (e.keyCode == 13) {
@@ -181,8 +180,9 @@ $(function () {
     $("#commentBody_" + data.id).html(data.body);
   });
 
-  $(".editBtn").on("click", function () {
-    var Id = this.id.toString().substring(17, 999);
+  $("#comments").on("click", ".editBtn", function (e) {
+    debugger
+    var Id = this.id.toString().substring(8, 999);
     var commentText = $(this).parent().find(".commentText");
     if (commentText.hasClass("notEditing")) {
       commentText.addClass("editing").removeClass("notEditing");
@@ -191,12 +191,11 @@ $(function () {
       commentText.addClass("notEditing").removeClass("editing");
     }
   });
-
-  $(".delBtn").on("click", function () {
+  var comment;
+  $("#comments").on("click", ".delBtn", function () {
     var commentId = $(this).attr("x-id");
     comment = $(this);
-  }).parent().on("ajax:success", function (e, data, status, xhr) {
-    debugger
+  }).on("ajax:success", function (e, data, status, xhr) {
     comment.parent().parent().remove();
   })
 

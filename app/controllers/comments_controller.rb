@@ -18,7 +18,6 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
-    binding.pry
     render({json: {success: true}})
   end
 
