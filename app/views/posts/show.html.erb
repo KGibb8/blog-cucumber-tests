@@ -35,6 +35,7 @@
       <% else %>
         <div class="unlike">
       <% end %>
+      <%# TODO: Change to <i> elements as inline-block, for both, change unlike to unlikeBtn, refactor javascript line 215-223 into function, write AJAX for unlike button, separate in controller methods "like" and "unlike" %>
           <div id="clickLike"><%= image_tag('like_icon_alt.png', alt: "Like", class: 'likeBtnImg', id: @post.id) %></div>
           <div id="clickUnlike"><%= image_tag('liked_icon_alt.png', alt: "Unlike", class: 'likeBtnImg', id: @post.id) %></div>
         </div>
