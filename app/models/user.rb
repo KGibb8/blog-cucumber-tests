@@ -3,8 +3,11 @@ require './app/uploaders/avatar_uploader'
 class User < ApplicationRecord
   has_many :posts
   has_many :comments
+  # Polymorphism: has_many :post_likes, through: :likes, source: :post
   has_many :likes
-  # has_many :post_likes, through: :likes, source: :post
+  # active_relationship - self is follower in the relationship
+  has_many :active_relationships, class_name: 'Relationship', foreign_key: 'follower_id', dependent: :destroy
+
   # This works in tandem with fields for 
   accepts_nested_attributes_for :comments
   # Add Avatar Uploader
