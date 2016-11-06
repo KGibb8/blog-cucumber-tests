@@ -3,9 +3,9 @@ require './app/uploaders/avatar_uploader'
 class User < ApplicationRecord
   has_one :profile, dependent: :destroy
   has_many :posts, dependent: :destroy
-  has_many :comments
+  has_many :comments, dependent: :destroy
   # Polymorphism: has_many :post_likes, through: :likes, source: :post
-  has_many :likes
+  has_many :likes, dependent: :destroy
   # active_relationship - self is follower
   has_many :active_relationships, class_name: 'Relationship', foreign_key: 'follower_id', dependent: :destroy
   # self following many through active_relationships, source associates 'following' with 'followed' foreign_key

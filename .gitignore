@@ -20,3 +20,6 @@ coverage
 *.swp
 *.swo
 *.swm
+
+# Ignore public uploads folder
+/public/uploads
