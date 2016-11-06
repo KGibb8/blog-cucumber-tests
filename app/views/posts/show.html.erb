@@ -72,7 +72,7 @@
 
               <%# Comment's user details (display on left) %>
               <div class="userProfile">
-                <%= image_tag(comment.user.avatar.icon.url, class: 'userAvatar') unless comment.user.avatar.nil? %>
+                <%= image_tag(comment.user.profile.avatar.icon.url, class: 'userAvatar') unless comment.user.profile.avatar.nil? %>
                 <p class="userName"><%= comment.user.email %></p>
               </div>
 
@@ -159,8 +159,8 @@ $(function () {
     // Append New Comment!
     var root = $(".commentContainer").clone()
     recurse($(root[0]), data.comment.id)
-    $(root[0]).find(".userAvatar").attr("src", data.user.avatar.icon.url);
-    $(root[0]).find(".userName").replaceWith(data.user.email);
+    $(root[0]).find(".userAvatar").attr("src", data.profile.avatar.icon.url);
+    $(root[0]).find(".userName").replaceWith(data.profile.username);
     $(root[0]).find("#commentBody_" + data.comment.id).replaceWith(data.comment.body);
     // TODO : Just in case the above button_for solution has issues, here's where the problem may lie
     $(root[0]).find('textarea[id="edit_comment_body"]').html(data.comment.body);

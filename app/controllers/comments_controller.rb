@@ -4,16 +4,14 @@ class CommentsController < ApplicationController
   def create
     my_comment_params = comment_params.to_h.merge(post_id: params[:post_id])
     comment = current_user.comments.create(my_comment_params)
-    comment.user.avatar = comment.user.avatar.icon.url
-    render({json: {comment: comment, user: current_user}})
+    render({json: {comment: comment, profile: current_user.profile}})
     # render({json: comment, json: current_user})
     # render({json: comment, include: {user: {only: [:email, :avatar]}}})
   end
   
   def update
     @comment.update(comment_params)
-    # @comment.user.avatar = @comment.user.avatar.icon.url
-    render({json: @comment, include: {user: {only: :email}}})
+    render({json: @comment, include: {profile: {only: :username}}})
   end
 
   def destroy

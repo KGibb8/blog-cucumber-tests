@@ -1,1 +1,19 @@
-<%= @profile.user.email %>
+<div class="row">
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-2">
+    <%= image_tag(@profile.avatar.thumb.url) %>
+  </div>
+  <div class="col-md-1">
+  </div>
+  <div class="col-md-3">
+    <p class="description">
+      <%= @profile.description %>
+    </p>
+  </div>
+  <div class="col-md-1">
+    <h2 class="name">
+      <%= @profile.username %>
+    </h2>
+  </div>
+</div>
