@@ -2,7 +2,22 @@ require 'rails_helper'
 
 RSpec.describe User do
 
-  describe 'user_rank' do
+  describe 'Follow and unfollow other Users' do
+    before do
+      @jack= User.create(email: 'jack@upthehill.net', password: 'password', password_confirmation: 'password')
+      @jill= User.create(email: 'jill@upthehill.net', password: 'password', password_confirmation: 'password')
+    end
+    it "should follow and unfollow a user" do
+      @jack.follow @jill
+      expect(@jack.following.first).to eq @jill
+      expect(@jack.following? @jill).to be_truthy
+      @jack.unfollow @jill
+      expect(@jack.following.first).to_not eq @jill
+      expect(@jack.following? @jill).to be_falsey
+    end
+  end
+
+  describe 'User rank based on forum contribution' do
     before do
       @user = User.create(email: Faker::Internet.email, password: 'password', password_confirmation: 'password')
       5.times do
