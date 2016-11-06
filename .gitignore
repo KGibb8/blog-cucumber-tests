@@ -23,3 +23,6 @@ coverage
 
 # Ignore public uploads folder
 /public/uploads
+
+# Ignore tags
+tags
