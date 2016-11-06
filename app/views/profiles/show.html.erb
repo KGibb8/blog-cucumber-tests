@@ -1,3 +1,21 @@
+
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8"></div>
+  <% unless current_user.profile == @profile %>
+    <% unless current_user.following? @profile.user %>
+      <div class="follow">
+    <% else %>
+      <div class="unfollow">
+    <% end %>
+        <%= button_to "Follow", relationships_path, params: {user_id: @profile.user.id}, remote: true, method: :post, class: "followBtn btn", id: "clickFollow" %>
+        <%= button_to "Unfollow", relationship_path(@profile.user), remote: true, method: :delete, class: "followBtn btn", id: "clickUnfollow" %>
+      </div>
+  <% end %>
+  <div class="col-md-2">
+  </div>
+</div>
+
 <div class="row">
   <div class="col-md-1">
   </div>
@@ -17,3 +35,25 @@
     </h2>
   </div>
 </div>
+
+<script>
+$(function () {
+  $('.button_to').on('ajax:success', function (e, data) {
+    debugger
+    var followBox = $($(this).parent()[0]);
+    var clickFollow = $(".clickFollow");
+    var clickUnfollow = $(".clickUnfollow");
+    if (followBox.hasClass("follow")) {
+      followBox.addClass("unfollow").removeClass("follow");
+      $(clickFollow).css("display", "none");
+      $(clickUnfollow).css("display", "block");
+    } else {
+      followBox.addClass("follow").removeClass("unfollow");
+      $(clickFollow).css("display", "block");
+      $(clickUnfollow).css("display", "none");
+    }
+
+  });
+})
+</script>
+
