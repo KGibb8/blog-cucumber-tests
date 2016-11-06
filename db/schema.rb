@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161105145354) do
+ActiveRecord::Schema.define(version: 20161106151720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,20 @@ ActiveRecord::Schema.define(version: 20161105145354) do
     t.string   "title"
     t.json     "pictures"
     t.index ["user_id"], name: "index_posts_on_user_id", using: :btree
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "username"
+    t.text     "description"
+    t.json     "photos"
+    t.string   "avatar"
+    t.string   "theme_color"
+    t.string   "location"
+    t.string   "website"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["user_id"], name: "index_profiles_on_user_id", using: :btree
   end
 
   create_table "relationships", force: :cascade do |t|
@@ -92,6 +106,7 @@ ActiveRecord::Schema.define(version: 20161105145354) do
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
   add_foreign_key "posts", "users"
+  add_foreign_key "profiles", "users"
   add_foreign_key "taggings", "posts"
   add_foreign_key "taggings", "tags"
 end
