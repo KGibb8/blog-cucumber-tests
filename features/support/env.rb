@@ -1,4 +1,3 @@
-
 require 'simplecov'
 SimpleCov.start('rails') do
   add_filter 'app/mailers/application_mailer.rb'
